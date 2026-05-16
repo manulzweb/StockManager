@@ -1,5 +1,8 @@
-import { request } from "../shared/api";
+import { helpHttp } from "../shared/helpers/helpHttp";
+const url = 'http://localhost:3099'
+
+const api = helpHttp()
 
 export const getProducts = async () => {
-    return await request('productos', 'GET');
+    return api.get(`${url}/productos`)
 }

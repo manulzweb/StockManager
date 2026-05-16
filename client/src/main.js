@@ -5,11 +5,11 @@ import './styles/globals.css';
 
 const init = async () => {
     try {
-        const data = await getProducts();
+        const data = getProducts().then(res=> res);
         renderRows(data);
-    } catch (e) {
-        showToast('No hay productos','error')
-        console.log(e);
+
+    } catch {
+        showToast('No hay productos','error');
         
     }
 }

@@ -20,6 +20,13 @@
             "precio": 5.99,
             "stock":20,
             "descripcion": "Descripción del producto 3"
+        },
+        {
+            "id": 3,
+            "nombre": "Producto 3",
+            "precio": 5.99,
+            "stock":20,
+            "descripcion": "Descripción del producto 3"
         }
     ]
 }
