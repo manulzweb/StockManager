@@ -5,10 +5,10 @@ export const helpHttp = () => {
       accept: "application/json",
     };
 
-    const controller = new AbortController(); //Cancela cualquier petición que se quede truncada por error en la api
-    options.signal = controller.signal;
+    const controller = new AbortController()
+    options.signal = controller.signal
 
-    options.method = options.method || "GET";
+    options.method = options.method || "GET"
 
     options.headers = options.headers
       ? { ...defaultHeader, ...options.headers }
@@ -24,23 +24,20 @@ export const helpHttp = () => {
 
     return fetch(endpoint, options)
         .then((res) => 
-        res.ok
-    ?res.json()
-:Promise.reject({
-    err: true,
-    status:res.status || "00",
-    statusText: res.statusText || "Ocurrió un error",
-}))
+          res.ok
+          ?res.json()
+          :Promise.reject({
+              err: true,
+              status:res.status || "00",
+              statusText: res.statusText || "Ocurrió un error",
+          })
+        )
   };
-
-
   const get = async (url, options = {}) => customFetch(url, options)
-  
   const post = async (url, options = {}) => {
     options.method = "POST";
     return customFetch(url, options);
   };
-
   const put = async (url, options = {}) => {
     options.method = "PUT";
     return customFetch(url, options);

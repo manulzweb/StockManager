@@ -1,16 +1,17 @@
 import { getProducts } from './services/product.service';
-import { renderRows } from './shared/components/Tablerow';
 import { showToast } from './shared/components/Toast';
+import { InventoryController } from "./controllers/InventoryController";
 import './styles/globals.css';
 
 const init = async () => {
     try {
-        const data = getProducts().then(res=> res);
-        renderRows(data);
+        const data = await getProducts()
+        const inventoryController = new InventoryController('#inventory-list', '#product-form')
+        inventoryController.render(data)
+    } catch (e) {
+        showToast('No hay productos', 'error');
+        console.log(e);
 
-    } catch {
-        showToast('No hay productos','error');
-        
     }
 }
 
