@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2'
+import i18next from 'i18next'
 
 export const showToast = (title, text='', icon='success') => {
   Swal.mixin({
@@ -25,12 +26,12 @@ export const showConfirm = (title, text='', confirmed, denied) => {
     icon: 'warning',
     showDenyButton: true,
     showCancelButton: false,
-    confirmButtonText: 'Sí',
-    denyButtonText: 'No',
+    confirmButtonText: i18next.t('toast.yes') || 'Sí',
+    denyButtonText: i18next.t('toast.no') || 'No',
     customClass: {
-      popup: 'rounded-3xl shadow-xl',
-      confirmButton: 'order-0 rounded-xl px-6 py-2',
-      denyButton: 'order-1 rounded-xl px-6 py-2'
+      popup: 'rounded-3xl shadow-xl bg-(--bg-card) text-(--text-primary)',
+      confirmButton: 'order-0 rounded-xl px-6 py-2 bg-(--brand) text-(--text-inverse)',
+      denyButton: 'order-1 rounded-xl px-6 py-2 bg-(--bg-hover) text-(--text-primary)'
     }
   }).then((result) => {
     if (result.isConfirmed) {

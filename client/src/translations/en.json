@@ -1,0 +1,63 @@
+{
+  "app": {
+    "title": "StockMaster",
+    "subtitle": "Inventory Management",
+    "search_placeholder": "Search catalog..."
+  },
+  "form": {
+    "title_create": "Product Details",
+    "title_edit": "Editing Product",
+    "subtitle": "Complete the item's information.",
+    "name": "Product Name",
+    "name_placeholder": "E.g. LG 27\" Monitor",
+    "price": "Price ($)",
+    "stock": "Current Stock",
+    "description": "Description",
+    "description_placeholder": "Specs, colors, condition...",
+    "btn_save": "Save Product",
+    "btn_update": "Update",
+    "btn_clear": "Clear Form"
+  },
+  "table": {
+    "product": "Product / Description",
+    "stock": "In Stock",
+    "price": "Unit Price",
+    "actions": "Actions",
+    "empty": "No products in inventory"
+  },
+  "stats": {
+    "total_sku": "Total SKUs",
+    "inventory_value": "Inventory Value",
+    "critical_stock": "Critical Stock"
+  },
+  "pagination": {
+    "info": "Showing {{start}} to {{end}} of {{total}} products",
+    "empty": "No products",
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "toast": {
+    "notification": "Notification",
+    "warning": "Warning",
+    "success_create": "Product registered successfully",
+    "success_update": "Product updated successfully",
+    "success_delete": "Product deleted successfully",
+    "error_name": "Name is required",
+    "error_price": "Price must be greater than 0",
+    "error_stock": "Stock cannot be empty or negative",
+    "confirm_delete_title": "Confirm deletion",
+    "confirm_delete_text": "Do you want to delete the following product? \nName: {{nombre}} | Price: {{precio}} | Stock: {{stock}}",
+    "cancel_title": "Canceled",
+    "cancel_text": "The product is still in the inventory",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "components": {
+    "units": "units",
+    "unit": "unit",
+    "out_of_stock": "Out of Stock",
+    "no_description": "No description",
+    "edit": "Edit",
+    "delete": "Delete"
+  }
+}

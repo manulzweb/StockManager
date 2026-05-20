@@ -3,6 +3,7 @@ import { tableRow, formatStockText, getColorByStock, formatPriceText } from "../
 import { showToast, showConfirm } from "../shared/components/Toast"
 import { statCard } from "../shared/components/statsCard"
 import { pagination } from "../shared/components/paginationFooter"
+import i18next from 'i18next'
 
 
 export class InventoryController {
@@ -20,7 +21,7 @@ export class InventoryController {
 
     render(products) {
         if (!products) {
-            throw new Error('No hay productos en el inventario')
+            throw new Error(i18next.t('table.empty'))
         }
         products.forEach((product) => {
             this.products.set(String(product.id), product)
@@ -66,14 +67,14 @@ export class InventoryController {
         if (btnPrev && !btnPrev.disabled) {
             btnPrev.addEventListener('click', () => {
                 this.currentPage--
-                this._renderTable(Array.from(this.products.values()))
+                this._renderTable(this._getCurrentProducts())
             })
         }
 
         if (btnNext && !btnNext.disabled) {
             btnNext.addEventListener('click', () => {
                 this.currentPage++
-                this._renderTable(Array.from(this.products.values()))
+                this._renderTable(this._getCurrentProducts())
             })
         }
     }
@@ -105,28 +106,47 @@ export class InventoryController {
         this.form.querySelector('#stock').value = product.stock || 0
         this.form.querySelector('#descripcion').value = product.descripcion || ''
 
-        document.querySelector('#form-title').textContent = 'Editando producto'
+        const formTitle = document.querySelector('#form-title')
+        formTitle.setAttribute('data-i18n', 'form.title_edit')
+        formTitle.textContent = i18next.t('form.title_edit')
+        
         const submitBtn = this.form.querySelector('#btn-submit')
-        submitBtn.textContent = 'Actualizar'
+        submitBtn.setAttribute('data-i18n', 'form.btn_update')
+        submitBtn.textContent = i18next.t('form.btn_update')
 
         this.form.dataset.mode = 'edit'
         this.form.dataset.editId = product.id
     }
 
     _initSearchBarListener() {
-        const bar = document.querySelector('.search-bar')
-        bar.addEventListener('keydown', (event)=>{
-            if (event.key != 'Esc') {
-                bar.textContent = ''
-            } else {
-                this._searchProduct()
-            }
-        })
+        const bar = document.querySelector('#search-bar')
+        if (!bar) return
+        
+        bar.addEventListener('input', (event) => this._searchProduct(event.target.value.trim() || '')
+        )
     }
 
-    _searchProduct(){
-        return 'hola'
+    _searchProduct(query){
+        this.currentPage = 1
+        const allProducts = Array.from(this.products.values())
+        if (!query) return allProducts
+        const starts = []
+        const contains = []
+        for (const product of allProducts) {
+            const name = product.nombre.toLowerCase()
+            if (name.startsWith(query)) {
+                starts.push(product)
+            } else if (name.includes(query)) {
+                contains.push(product)
+            }
+        }
+        this._renderTable([...starts, ...contains])
     }
+
+    _getCurrentProducts() {
+        return Array.from(this.products.values())
+    }
+
     _initFormListener() {
         const submitBtn = this.form.querySelector('#btn-submit')
         const cancelBtn = this.form.querySelector('#btn-cancel')
@@ -144,15 +164,19 @@ export class InventoryController {
                 if (mode === 'edit') {
                     const id = this.form.dataset.editId
                     await this._handleUpdate(id)
-                    showToast('Notificación', 'Producto actualizado correctamente')
+                    showToast(i18next.t('toast.notification'), i18next.t('toast.success_update'))
                     this.form.reset()
                     this.form.dataset.mode = 'create'
                     this.form.removeAttribute('data-edit-id')
-                    document.querySelector('#form-title').textContent = 'Agregar producto'
-                    submitBtn.textContent = 'Guardar'
+                    const formTitle = document.querySelector('#form-title')
+                    formTitle.setAttribute('data-i18n', 'form.title_create')
+                    formTitle.textContent = i18next.t('form.title_create')
+                    
+                    submitBtn.setAttribute('data-i18n', 'form.btn_save')
+                    submitBtn.textContent = i18next.t('form.btn_save')
                 } else {
                     await this._handleCreate()
-                    showToast('Notificación', 'Producto registrado correctamente')
+                    showToast(i18next.t('toast.notification'), i18next.t('toast.success_create'))
                     this.form.reset()
                 }
             } catch (error) {
@@ -170,17 +194,17 @@ export class InventoryController {
         let newDescription = this.form.querySelector('#descripcion').value.trim()
 
         if (!newName) {
-            showToast('Advertencia', 'El nombre es obligatorio', 'warning')
+            showToast(i18next.t('toast.warning'), i18next.t('toast.error_name'), 'warning')
             throw new Error('Nombre invalido')
         }
         
         if (!newPrice || newPrice <= 0) {
-            showToast('Advertencia', 'El precio debe ser mayor a 0', 'warning')
+            showToast(i18next.t('toast.warning'), i18next.t('toast.error_price'), 'warning')
             throw new Error('Precio invalido')
         }
 
         if (stockInput === '' || newStock < 0) {
-            showToast('Advertencia', 'El stock no puede estar vacío ni ser negativo', 'warning')
+            showToast(i18next.t('toast.warning'), i18next.t('toast.error_stock'), 'warning')
             throw new Error('Stock invalido')
         }
 
@@ -198,9 +222,9 @@ export class InventoryController {
         const newData = this._validateInputs()
         const createdProduct = await createProduct(newData)
         this.products.set(String(createdProduct.id), createdProduct)
-        const allProductsArray = Array.from(this.products.values())
-        this.currentPage = Math.trunc(allProductsArray.length / this.itemsPerPage) + 1
-        this._renderTable(allProductsArray)
+        const currentProducts = this._getCurrentProducts()
+        this.currentPage = Math.ceil(currentProducts.length / this.itemsPerPage) || 1
+        this._renderTable(currentProducts)
         this._renderStats()
     }
 
@@ -218,26 +242,28 @@ export class InventoryController {
 
     async _handleDelete(product) {
         const isConfirmed = await showConfirm(
-            'Confirmar eliminación',
-            `¿Desea usted eliminar el siguiente producto? \nNombre: ${product.nombre} | Precio: ${product.precio} | Stock: ${product.stock}`,
+            i18next.t('toast.confirm_delete_title'),
+            i18next.t('toast.confirm_delete_text', { nombre: product.nombre, precio: product.precio, stock: product.stock }),
             null,
-            { title: 'Cancelado', text: 'El producto sigue en el inventario' }
+            { title: i18next.t('toast.cancel_title'), text: i18next.t('toast.cancel_text') }
         )
 
         if (isConfirmed) {
             this.products.delete(String(product.id))
 
-            const allProductsArray = Array.from(this.products.values())
-            const totalPagesCalculated = Math.ceil(allProductsArray.length / this.itemsPerPage)
+            const currentProducts = this._getCurrentProducts()
+            const totalPagesCalculated = Math.ceil(currentProducts.length / this.itemsPerPage)
             
             if (this.currentPage > totalPagesCalculated && totalPagesCalculated > 0) {
                 this.currentPage = totalPagesCalculated
+            } else if (this.currentPage === 0 && totalPagesCalculated > 0) {
+                this.currentPage = 1
             }
 
-            this._renderTable(allProductsArray)
+            this._renderTable(currentProducts)
 
             await deleteProduct(product.id)
-            showToast('Notificación', 'Producto eliminado correctamente', 'success')
+            showToast(i18next.t('toast.notification'), i18next.t('toast.success_delete'), 'success')
             this._renderStats()
         }
     }
@@ -279,19 +305,19 @@ export class InventoryController {
 
         statsContainer.innerHTML = `
             ${statCard({
-            title: 'Total SKU',
+            title: i18next.t('stats.total_sku'),
             value: totalSKU
         })}
             ${statCard({
-            title: 'Valor Inventario',
+            title: i18next.t('stats.inventory_value'),
             value: '$' + formatPriceText(totalValue),
-            borderStyle: 'border-l-4 border-l-indigo-500'
+            borderStyle: 'border-l-4 border-l-(--brand)'
         })}
             ${statCard({
-            title: 'Stock Crítico',
+            title: i18next.t('stats.critical_stock'),
             value: criticalStock,
-            borderStyle: 'border-l-4 border-l-rose-500',
-            valueColor: 'text-rose-500'
+            borderStyle: 'border-l-4 border-l-(--danger-border)',
+            valueColor: 'text-(--danger-text)'
         })}
         `
     }

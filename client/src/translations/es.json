@@ -1,0 +1,63 @@
+{
+  "app": {
+    "title": "StockMaster",
+    "subtitle": "Gestión de Inventario",
+    "search_placeholder": "Buscar en el catálogo..."
+  },
+  "form": {
+    "title_create": "Detalles del Producto",
+    "title_edit": "Editando producto",
+    "subtitle": "Completa la información del artículo.",
+    "name": "Nombre del Producto",
+    "name_placeholder": "Ej. Monitor LG 27\"",
+    "price": "Precio ($)",
+    "stock": "Stock Actual",
+    "description": "Descripción",
+    "description_placeholder": "Especificaciones, colores, estado...",
+    "btn_save": "Guardar Producto",
+    "btn_update": "Actualizar",
+    "btn_clear": "Limpiar Formulario"
+  },
+  "table": {
+    "product": "Producto / Descripción",
+    "stock": "Existencias",
+    "price": "Precio Unit.",
+    "actions": "Acciones",
+    "empty": "No hay productos en el inventario"
+  },
+  "stats": {
+    "total_sku": "Total SKU",
+    "inventory_value": "Valor Inventario",
+    "critical_stock": "Stock Crítico"
+  },
+  "pagination": {
+    "info": "Mostrando {{start}} a {{end}} de {{total}} productos",
+    "empty": "No hay productos",
+    "prev": "Anterior",
+    "next": "Siguiente"
+  },
+  "toast": {
+    "notification": "Notificación",
+    "warning": "Advertencia",
+    "success_create": "Producto registrado correctamente",
+    "success_update": "Producto actualizado correctamente",
+    "success_delete": "Producto eliminado correctamente",
+    "error_name": "El nombre es obligatorio",
+    "error_price": "El precio debe ser mayor a 0",
+    "error_stock": "El stock no puede estar vacío ni ser negativo",
+    "confirm_delete_title": "Confirmar eliminación",
+    "confirm_delete_text": "¿Desea usted eliminar el siguiente producto? \nNombre: {{nombre}} | Precio: {{precio}} | Stock: {{stock}}",
+    "cancel_title": "Cancelado",
+    "cancel_text": "El producto sigue en el inventario",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "components": {
+    "units": "unidades",
+    "unit": "unidad",
+    "out_of_stock": "Sin Stock",
+    "no_description": "Sin descripción",
+    "edit": "Editar",
+    "delete": "Eliminar"
+  }
+}
