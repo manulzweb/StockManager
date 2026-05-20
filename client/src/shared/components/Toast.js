@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2'
 import i18next from 'i18next'
 
-export const showToast = (title, text='', icon='success') => {
+export const mostrarToast = (titulo, texto = '', icono = 'success') => {
   Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -13,14 +13,14 @@ export const showToast = (title, text='', icon='success') => {
       toast.onmouseleave = Swal.resumeTimer;
     }
   }).fire({
-    icon: icon,
-    title: title,
-    text: text
+    icon: icono,
+    title: titulo,
+    text: texto
   })
 }
 
-export const showConfirm = (title, product, confirmed, denied) => {
-  const html = product ? `
+export const mostrarConfirmacion = (titulo, producto, confirmado, denegado) => {
+  const codigoHtml = producto ? `
     <div style="
       background: var(--bg-input);
       border: 1px solid var(--border-200);
@@ -43,8 +43,8 @@ export const showConfirm = (title, product, confirmed, denied) => {
           </svg>
         </div>
         <div>
-          <p style="margin:0; font-weight:800; font-size:15px; color:var(--text-primary);">${product.nombre}</p>
-          <p style="margin:0; font-size:11px; color:var(--text-muted); margin-top:2px;">${product.descripcion}</p>
+          <p style="margin:0; font-weight:800; font-size:15px; color:var(--text-primary);">${producto.nombre}</p>
+          <p style="margin:0; font-size:11px; color:var(--text-muted); margin-top:2px;">${producto.descripcion}</p>
         </div>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
@@ -55,7 +55,7 @@ export const showConfirm = (title, product, confirmed, denied) => {
           padding: 10px 12px;
         ">
           <p style="margin:0; font-size:9px; font-weight:900; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">Precio</p>
-          <p style="margin:4px 0 0; font-size:16px; font-weight:800; color:var(--brand);">$${product.precio.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</p>
+          <p style="margin:4px 0 0; font-size:16px; font-weight:800; color:var(--brand);">$${producto.precio.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
         </div>
         <div style="
           background: var(--bg-card);
@@ -64,15 +64,15 @@ export const showConfirm = (title, product, confirmed, denied) => {
           padding: 10px 12px;
         ">
           <p style="margin:0; font-size:9px; font-weight:900; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">Stock</p>
-          <p style="margin:4px 0 0; font-size:16px; font-weight:800; color:${product.stock <= 5 ? 'var(--danger-text)' : product.stock <= 10 ? 'var(--warning-text)' : 'var(--success-text)'}">${product.stock} uds.</p>
+          <p style="margin:4px 0 0; font-size:16px; font-weight:800; color:${producto.stock <= 5 ? 'var(--danger-text)' : producto.stock <= 10 ? 'var(--warning-text)' : 'var(--success-text)'}">${producto.stock} uds.</p>
         </div>
       </div>
     </div>
   ` : ''
 
   return Swal.fire({
-    title: title,
-    html: html,
+    title: titulo,
+    html: codigoHtml,
     icon: 'warning',
     showDenyButton: true,
     showCancelButton: false,
@@ -85,12 +85,12 @@ export const showConfirm = (title, product, confirmed, denied) => {
       denyButton: 'swal-btn-deny',
       icon: 'swal-custom-icon'
     }
-  }).then((result) => {
-    if (result.isConfirmed) {
-      if (confirmed) showToast(confirmed.title, confirmed.text || '', 'success')
+  }).then((resultado) => {
+    if (resultado.isConfirmed) {
+      if (confirmado) mostrarToast(confirmado.title, confirmado.text || '', 'success')
       return true
-    } else if (result.isDenied) {
-      if (denied) showToast(denied.title, denied.text || '', 'info')
+    } else if (resultado.isDenied) {
+      if (denegado) mostrarToast(denegado.title, denegado.text || '', 'info')
       return false
     }
     return false

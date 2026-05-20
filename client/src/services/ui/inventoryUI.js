@@ -1,7 +1,7 @@
-import { tableRow } from "../../shared/components/tableRow";
-import { formatPriceText } from "../../shared/utils/formatters";
-import { statCard } from "../../shared/components/statsCard";
-import { pagination } from "../../shared/components/paginationFooter";
+import { filaTabla } from "../../shared/components/tableRow";
+import { formatearPrecioTexto } from "../../shared/utils/formatters";
+import { tarjetaEstadistica } from "../../shared/components/statsCard";
+import { paginacion } from "../../shared/components/paginationFooter";
 import i18next from 'i18next';
 
 export const dibujarTablaUI = (productosDeEstaPagina, cuerpoTabla) => {
@@ -14,7 +14,7 @@ export const dibujarTablaUI = (productosDeEstaPagina, cuerpoTabla) => {
 
     let htmlFilas = '';
     productosDeEstaPagina.forEach(producto => {
-        htmlFilas += tableRow(producto);
+        htmlFilas += filaTabla(producto);
     });
 
     cuerpoTabla.innerHTML = htmlFilas;
@@ -32,9 +32,9 @@ export const dibujarEstadisticasUI = (todosLosProductos, contenedorStats) => {
     });
 
     contenedorStats.innerHTML = `
-        ${statCard({ title: i18next.t('stats.total_sku'), value: todosLosProductos.length })}
-        ${statCard({ title: i18next.t('stats.inventory_value'), value: '$' + formatPriceText(valorTotal), borderStyle: 'border-l-4 border-l-(--brand)' })}
-        ${statCard({ title: i18next.t('stats.critical_stock'), value: stockCritico, borderStyle: 'border-l-4 border-l-(--danger-border)', valueColor: 'text-(--danger-text)' })}
+        ${tarjetaEstadistica({ titulo: i18next.t('stats.total_sku'), valor: todosLosProductos.length })}
+        ${tarjetaEstadistica({ titulo: i18next.t('stats.inventory_value'), valor: '$' + formatearPrecioTexto(valorTotal), estiloBorde: 'border-l-4 border-l-(--brand)' })}
+        ${tarjetaEstadistica({ titulo: i18next.t('stats.critical_stock'), valor: stockCritico, estiloBorde: 'border-l-4 border-l-(--danger-border)', valueColor: 'text-(--danger-text)' })}
     `;
 };
 
@@ -43,16 +43,16 @@ export const dibujarPaginacionUI = (paginaActual, totalFiltrados, itemsPorPagina
 
     const inicioNum = totalFiltrados === 0 ? 0 : ((paginaActual - 1) * itemsPorPagina) + 1;
     const finNum = Math.min(paginaActual * itemsPorPagina, totalFiltrados);
-    
+
     const tieneAnterior = paginaActual > 1;
     const tieneSiguiente = paginaActual < Math.ceil(totalFiltrados / itemsPorPagina);
 
-    contenedorPaginacion.innerHTML = pagination({ 
-        start: inicioNum, 
-        end: finNum, 
-        total: totalFiltrados, 
-        hasPrev: tieneAnterior, 
-        hasNext: tieneSiguiente 
+    contenedorPaginacion.innerHTML = paginacion({
+        inicio: inicioNum,
+        fin: finNum,
+        total: totalFiltrados,
+        tieneAnterior: tieneAnterior,
+        tieneSiguiente: tieneSiguiente
     });
 };
 
@@ -65,7 +65,7 @@ export const prepararFormularioEdicionUI = (producto, formulario) => {
     const tituloFormulario = document.querySelector('#form-title');
     tituloFormulario.setAttribute('data-i18n', 'form.title_edit');
     tituloFormulario.textContent = i18next.t('form.title_edit');
-    
+
     const btnGuardar = formulario.querySelector('#btn-submit');
     btnGuardar.setAttribute('data-i18n', 'form.btn_update');
     btnGuardar.textContent = i18next.t('form.btn_update');
@@ -75,7 +75,7 @@ export const restaurarFormularioACrearUI = (formulario) => {
     const tituloFormulario = document.querySelector('#form-title');
     tituloFormulario.setAttribute('data-i18n', 'form.title_create');
     tituloFormulario.textContent = i18next.t('form.title_create');
-    
+
     const btnGuardar = formulario.querySelector('#btn-submit');
     btnGuardar.setAttribute('data-i18n', 'form.btn_save');
     btnGuardar.textContent = i18next.t('form.btn_save');

@@ -14,44 +14,44 @@ import i18next from 'i18next';
 import esTranslations from '../translations/es.json';
 import enTranslations from '../translations/en.json';
 
-export const updateDOMTranslations = () => {
+export const actualizarTraduccionesDOM = () => {
     // 1. Buscamos todas las etiquetas HTML que tengan el atributo `data-i18n`
-    document.querySelectorAll('[data-i18n]').forEach(element => {
+    document.querySelectorAll('[data-i18n]').forEach(elemento => {
         // 2. Extraemos su valor (por ejemplo: "app.title")
-        const key = element.getAttribute('data-i18n');
-        
+        const clave = elemento.getAttribute('data-i18n');
+
         // 3. Le pedimos a i18next que busque la traducción y se la inyectamos como texto
-        element.textContent = i18next.t(key);
+        elemento.textContent = i18next.t(clave);
     });
 
     // 4. Hacemos exactamente lo mismo pero para los placeholders de los <input>
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-        const key = element.getAttribute('data-i18n-placeholder');
-        element.placeholder = i18next.t(key);
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(elemento => {
+        const clave = elemento.getAttribute('data-i18n-placeholder');
+        elemento.placeholder = i18next.t(clave);
     });
 };
 
-export const changeLanguage = async (lang) => {
+export const cambiarIdioma = async (idioma) => {
     // 5. Le decimos a la librería que cambie el idioma activo
-    await i18next.changeLanguage(lang);
-    
+    await i18next.changeLanguage(idioma);
+
     // 6. Guardamos el idioma en localStorage para que sobreviva a la recarga
-    localStorage.setItem('lang', lang);
-    
+    localStorage.setItem('lang', idioma);
+
     // 7. Re-dibujamos los textos en el HTML
-    updateDOMTranslations();
-    
+    actualizarTraduccionesDOM();
+
     // 8. Avisamos a otros archivos que el idioma cambió (por si tienen que dibujar tablas de nuevo)
     window.dispatchEvent(new Event('languageChanged'));
 };
 
-export const initI18n = async () => {
+export const inicializarI18n = async () => {
     // 9. Cuando arranca la app, miramos si el usuario ya tenía un idioma guardado
-    const savedLang = localStorage.getItem('lang') || 'es';
+    const idiomaGuardado = localStorage.getItem('lang') || 'es';
 
     // 10. Inicializamos la librería entregándole los diccionarios que importamos arriba
     await i18next.init({
-        lng: savedLang,
+        lng: idiomaGuardado,
         fallbackLng: 'es',
         resources: {
             es: { translation: esTranslations },
@@ -60,14 +60,14 @@ export const initI18n = async () => {
     });
 
     // 11. Ejecutamos la traducción por primera vez
-    updateDOMTranslations();
-    
+    actualizarTraduccionesDOM();
+
     // 12. Enlazamos el <select> del HTML para que active el cambio de idioma
-    const langSelect = document.querySelector('#lang-selector');
-    if (langSelect) {
-        langSelect.value = savedLang;
-        langSelect.addEventListener('change', async (event) => {
-            await changeLanguage(event.target.value);
+    const selectorIdioma = document.querySelector('#lang-selector');
+    if (selectorIdioma) {
+        selectorIdioma.value = idiomaGuardado;
+        selectorIdioma.addEventListener('change', async (evento) => {
+            await cambiarIdioma(evento.target.value);
         });
     }
 };

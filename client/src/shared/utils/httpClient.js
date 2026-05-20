@@ -19,19 +19,19 @@ export const helpHttp = () => {
     if (!options.body) delete options.body
 
     setTimeout(() => {
-        controller.abort()
+      controller.abort()
     }, 3000);
 
     return fetch(endpoint, options)
-        .then((res) => 
-          res.ok
-          ?res.json()
-          :Promise.reject({
-              err: true,
-              status:res.status || "00",
-              statusText: res.statusText || "Ocurrió un error",
+      .then((res) =>
+        res.ok
+          ? res.json()
+          : Promise.reject({
+            err: true,
+            status: res.status || "00",
+            statusText: res.statusText || "Ocurrió un error",
           })
-        )
+      )
   };
   const get = async (url, options = {}) => customFetch(url, options)
   const post = async (url, options = {}) => {

@@ -1,23 +1,23 @@
-import { initTheme } from './services/themeService';
-import { initI18n } from './services/i18nService';
-import { initInventory, dibujarTodo } from './services/inventoryService';
-import { showToast } from './shared/components/Toast';
+import { inicializarTema } from './services/themeService';
+import { inicializarI18n } from './services/i18nService';
+import { inicializarInventario, dibujarTodo } from './services/inventoryService';
+import { mostrarToast } from './shared/components/Toast';
 import './styles/globals.css';
 
-const init = async () => {
+const inicializar = async () => {
     try {
-        initTheme();
-        await initI18n();
-        await initInventory();
+        inicializarTema();
+        await inicializarI18n();
+        await inicializarInventario();
 
         window.addEventListener('languageChanged', () => {
             dibujarTodo();
         });
 
-    } catch (e) {
-        showToast('Error', 'Hubo un problema al iniciar la aplicación', 'error');
-        console.error(e);
+    } catch (error) {
+        mostrarToast('Error', 'Hubo un problema al iniciar la aplicación', 'error');
+        console.error(error);
     }
 }
 
-init();
+inicializar();

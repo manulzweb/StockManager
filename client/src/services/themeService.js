@@ -8,40 +8,40 @@
 
 // 1. Preguntamos si el navegador ya tenía guardado un tema de la última vez que el usuario entró.
 // Si no hay nada guardado, usamos 'light' por defecto.
-let currentTheme = localStorage.getItem('theme') || 'light';
+let temaActual = localStorage.getItem('theme') || 'light';
 
-export const applyTheme = (theme) => {
+export const aplicarTema = (tema) => {
     // 2. Si el tema es claro, quitamos el atributo del DOM (usamos los colores por defecto del CSS)
-    if (theme === 'light') {
+    if (tema === 'light') {
         document.documentElement.removeAttribute('data-theme');
     } else {
         // 3. Si es otro tema, le agregamos el atributo al tag <html>, por ejemplo: <html data-theme="dark">
         // El archivo CSS buscará este atributo y cambiará las variables de color.
-        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme', tema);
     }
 };
 
-export const setTheme = (theme) => {
+export const establecerTema = (tema) => {
     // 4. Cambiamos el color visualmente
-    applyTheme(theme);
-    
+    aplicarTema(tema);
+
     // 5. Lo guardamos en localStorage para que no se pierda al recargar la página
-    localStorage.setItem('theme', theme);
-    currentTheme = theme;
+    localStorage.setItem('theme', tema);
+    temaActual = tema;
 };
 
-export const initTheme = () => {
+export const inicializarTema = () => {
     // 6. Apenas carga la página, aplicamos el tema que estaba guardado
-    applyTheme(currentTheme);
-    
+    aplicarTema(temaActual);
+
     // 7. Buscamos el selector (<select>) en el HTML y hacemos que coincida con el tema actual
-    const themeSelect = document.querySelector('#theme-selector');
-    if (themeSelect) {
-        themeSelect.value = currentTheme;
-        
+    const selectorTema = document.querySelector('#theme-selector');
+    if (selectorTema) {
+        selectorTema.value = temaActual;
+
         // 8. Escuchamos si el usuario elige un tema diferente en el desplegable
-        themeSelect.addEventListener('change', (event) => {
-            setTheme(event.target.value);
+        selectorTema.addEventListener('change', (evento) => {
+            establecerTema(evento.target.value);
         });
     }
 };

@@ -1,21 +1,21 @@
 import { obtenerProductosAPI, crearProductoAPI, actualizarProductoAPI, eliminarProductoAPI } from './api/productAPI';
 import { dibujarTablaUI, dibujarEstadisticasUI, dibujarPaginacionUI, prepararFormularioEdicionUI, restaurarFormularioACrearUI } from './ui/inventoryUI';
-import { showToast, showConfirm } from "../shared/components/Toast";
+import { mostrarToast, mostrarConfirmacion } from "../shared/components/Toast";
 import i18next from 'i18next';
 
 // 1. Estado de nuestra aplicación
-let productos = []; 
-let productosFiltrados = []; 
+let productos = [];
+let productosFiltrados = [];
 let paginaActual = 1;
-const itemsPorPagina = 5;
+const ITEMS_POR_PAGINA = 5;
 
 // Variables para saber si estamos creando o editando un producto
-let modoFormulario = 'crear'; 
-let idProductoEditando = null; 
+let modoFormulario = 'crear';
+let idProductoEditando = null;
 
 let cuerpoTabla, formulario, contenedorPaginacion;
 
-export const initInventory = async () => {
+export const inicializarInventario = async () => {
     cuerpoTabla = document.querySelector('#inventory-list');
     formulario = document.querySelector('#product-form');
     contenedorPaginacion = document.querySelector('#pagination');
@@ -29,7 +29,7 @@ export const initInventory = async () => {
         productosFiltrados = [...productos];
     } catch (error) {
         console.log(error);
-        showToast(i18next.t('toast.warning'), "Error cargando la base de datos", "error");
+        mostrarToast(i18next.t('toast.warning'), "Error cargando la base de datos", "error");
     }
 
     dibujarTodo();
@@ -37,14 +37,14 @@ export const initInventory = async () => {
 
 export const dibujarTodo = () => {
     // 3. Calculamos qué productos mostrar según la página
-    const inicio = (paginaActual - 1) * itemsPorPagina;
-    const fin = inicio + itemsPorPagina;
+    const inicio = (paginaActual - 1) * ITEMS_POR_PAGINA;
+    const fin = inicio + ITEMS_POR_PAGINA;
     const productosDeEstaPagina = productosFiltrados.slice(inicio, fin);
 
     // 4. Llamamos a la UI para que pinte el HTML
     dibujarTablaUI(productosDeEstaPagina, cuerpoTabla);
     dibujarEstadisticasUI(productos, document.querySelector('#stats'));
-    dibujarPaginacionUI(paginaActual, productosFiltrados.length, itemsPorPagina, contenedorPaginacion);
+    dibujarPaginacionUI(paginaActual, productosFiltrados.length, ITEMS_POR_PAGINA, contenedorPaginacion);
 
     asignarEventosPaginacion();
     asignarEventosBotonesTabla();
@@ -72,23 +72,23 @@ const asignarEventosPaginacion = () => {
 
 const configurarEventosFormulario = () => {
     if (!formulario) return;
-    
+
     const btnGuardar = formulario.querySelector('#btn-submit');
     const btnCancelar = formulario.querySelector('#btn-cancel');
 
-    btnCancelar.addEventListener('click', (event) => {
-        event.preventDefault(); 
+    btnCancelar.addEventListener('click', (evento) => {
+        evento.preventDefault();
         formulario.reset();
-        
+
         // Volvemos al estado inicial
         modoFormulario = 'crear';
         idProductoEditando = null;
         restaurarFormularioACrearUI(formulario);
     });
 
-    btnGuardar.addEventListener('click', async (e) => {
-        e.preventDefault();
-        
+    btnGuardar.addEventListener('click', async (evento) => {
+        evento.preventDefault();
+
         const datos = validarFormulario();
         if (!datos) return;
 
@@ -96,13 +96,13 @@ const configurarEventosFormulario = () => {
             if (modoFormulario === 'editar') {
                 // 5. Actualizamos el producto existente
                 await actualizarProductoAPI(idProductoEditando, datos);
-                
+
                 const indice = productos.findIndex(p => String(p.id) === String(idProductoEditando));
                 if (indice !== -1) productos[indice] = { ...productos[indice], ...datos };
                 productosFiltrados = [...productos];
-                
-                showToast(i18next.t('toast.notification'), i18next.t('toast.success_update'), "success");
-                
+
+                mostrarToast(i18next.t('toast.notification'), i18next.t('toast.success_update'), "success");
+
                 // Reiniciamos al modo crear
                 modoFormulario = 'crear';
                 idProductoEditando = null;
@@ -112,9 +112,9 @@ const configurarEventosFormulario = () => {
                 const nuevoProducto = await crearProductoAPI(datos);
                 productos.push(nuevoProducto);
                 productosFiltrados = [...productos];
-                
-                paginaActual = Math.ceil(productosFiltrados.length / itemsPorPagina) || 1;
-                showToast(i18next.t('toast.notification'), i18next.t('toast.success_create'), "success");
+
+                paginaActual = Math.ceil(productosFiltrados.length / ITEMS_POR_PAGINA) || 1;
+                mostrarToast(i18next.t('toast.notification'), i18next.t('toast.success_create'), "success");
             }
 
             formulario.reset();
@@ -129,20 +129,20 @@ const configurarEventosFormulario = () => {
 const validarFormulario = () => {
     const nombre = formulario.querySelector('#nombre').value.trim();
     const precio = Number(formulario.querySelector('#precio').value);
-    const stockInputText = formulario.querySelector('#stock').value;
-    const stock = Number(stockInputText);
+    const textoStock = formulario.querySelector('#stock').value;
+    const stock = Number(textoStock);
     let descripcion = formulario.querySelector('#descripcion').value.trim();
 
     if (!nombre) {
-        showToast(i18next.t('toast.warning'), i18next.t('toast.error_name'), 'warning');
+        mostrarToast(i18next.t('toast.warning'), i18next.t('toast.error_name'), 'warning');
         return null;
     }
     if (!precio || precio <= 0) {
-        showToast(i18next.t('toast.warning'), i18next.t('toast.error_price'), 'warning');
+        mostrarToast(i18next.t('toast.warning'), i18next.t('toast.error_price'), 'warning');
         return null;
     }
-    if (stockInputText === '' || stock < 0) {
-        showToast(i18next.t('toast.warning'), i18next.t('toast.error_stock'), 'warning');
+    if (textoStock === '' || stock < 0) {
+        mostrarToast(i18next.t('toast.warning'), i18next.t('toast.error_stock'), 'warning');
         return null;
     }
 
@@ -154,15 +154,15 @@ const configurarBuscador = () => {
     const buscador = document.querySelector('#search-bar');
     if (!buscador) return;
 
-    buscador.addEventListener('input', (e) => {
-        const textoBuscar = e.target.value.toLowerCase().trim();
+    buscador.addEventListener('input', (evento) => {
+        const textoBuscar = evento.target.value.toLowerCase().trim();
         paginaActual = 1;
 
         if (!textoBuscar) {
             productosFiltrados = [...productos];
         } else {
-            productosFiltrados = productos.filter(p => 
-                p.nombre.toLowerCase().includes(textoBuscar) || 
+            productosFiltrados = productos.filter(p =>
+                p.nombre.toLowerCase().includes(textoBuscar) ||
                 p.descripcion.toLowerCase().includes(textoBuscar)
             );
         }
@@ -175,8 +175,8 @@ const asignarEventosBotonesTabla = () => {
     const botonesEliminar = cuerpoTabla.querySelectorAll('.delete-btn');
 
     botonesEditar.forEach(boton => {
-        boton.addEventListener('click', (e) => {
-            const id = e.currentTarget.dataset.id;
+        boton.addEventListener('click', (evento) => {
+            const id = evento.currentTarget.dataset.id;
             const producto = productos.find(p => String(p.id) === String(id));
             if (producto) {
                 // 7. Entramos en modo edición
@@ -188,12 +188,12 @@ const asignarEventosBotonesTabla = () => {
     });
 
     botonesEliminar.forEach(boton => {
-        boton.addEventListener('click', async (e) => {
-            const id = e.currentTarget.dataset.id;
+        boton.addEventListener('click', async (evento) => {
+            const id = evento.currentTarget.dataset.id;
             const producto = productos.find(p => String(p.id) === String(id));
             if (!producto) return;
 
-            const confirmado = await showConfirm(
+            const confirmado = await mostrarConfirmacion(
                 i18next.t('toast.confirm_delete_title'),
                 producto,
                 null,
@@ -204,15 +204,15 @@ const asignarEventosBotonesTabla = () => {
                 try {
                     // 8. Borramos en la base de datos
                     await eliminarProductoAPI(producto.id);
-                    
+
                     // Borramos en nuestra lista local
                     productos = productos.filter(p => String(p.id) !== String(producto.id));
                     productosFiltrados = [...productos];
-                    
-                    const totalPaginas = Math.ceil(productosFiltrados.length / itemsPorPagina);
+
+                    const totalPaginas = Math.ceil(productosFiltrados.length / ITEMS_POR_PAGINA);
                     if (paginaActual > totalPaginas && totalPaginas > 0) paginaActual = totalPaginas;
-                    
-                    showToast(i18next.t('toast.notification'), i18next.t('toast.success_delete'), 'success');
+
+                    mostrarToast(i18next.t('toast.notification'), i18next.t('toast.success_delete'), 'success');
                     dibujarTodo();
                 } catch (error) {
                     console.error("Error al eliminar:", error);
