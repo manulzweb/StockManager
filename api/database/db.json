@@ -1,46 +1,74 @@
 {
   "productos": [
     {
-      "nombre": "Producto 11",
-      "precio": 3,
-      "stock": 1,
-      "descripcion": "Sin descripción",
-      "id": "XFoJwfZUS6A"
+      "nombre": "Laptop Lenovo IdeaPad 3",
+      "precio": 2450000,
+      "stock": 8,
+      "descripcion": "Portátil Ryzen 5 con 8GB RAM y SSD de 512GB",
+      "id": "p1"
     },
     {
-      "nombre": "Producto2",
-      "precio": 4,
+      "nombre": "Mouse Logitech G203",
+      "precio": 95000,
+      "stock": 25,
+      "descripcion": "Mouse gamer RGB con sensor de alta precisión",
+      "id": "p2"
+    },
+    {
+      "nombre": "Teclado Mecánico Redragon Kumara",
+      "precio": 180000,
+      "stock": 12,
+      "descripcion": "Teclado mecánico compacto con switches blue",
+      "id": "p3"
+    },
+    {
+      "nombre": "Monitor Samsung 24 pulgadas",
+      "precio": 620000,
+      "stock": 6,
+      "descripcion": "Monitor Full HD IPS de 75Hz",
+      "id": "p4"
+    },
+    {
+      "nombre": "Audífonos HyperX Cloud Stinger",
+      "precio": 210000,
+      "stock": 15,
+      "descripcion": "Audífonos gamer con micrófono integrado",
+      "id": "p5"
+    },
+    {
+      "nombre": "SSD Kingston 1TB",
+      "precio": 320000,
+      "stock": 18,
+      "descripcion": "Disco sólido SATA de alta velocidad",
+      "id": "p6"
+    },
+    {
+      "nombre": "Silla Gamer Cougar Armor",
+      "precio": 980000,
       "stock": 4,
-      "descripcion": "Sin descripción",
-      "id": "AFGcaO3m1Kc"
+      "descripcion": "Silla ergonómica reclinable para oficina o gaming",
+      "id": "p7"
     },
     {
-      "nombre": "Producto3",
-      "precio": 3,
-      "stock": 4,
-      "descripcion": "Sin descripción",
-      "id": "AM9hTJSfbIE"
-    },
-    {
-      "nombre": "Producto 1",
-      "precio": 55,
-      "stock": 555,
-      "descripcion": "Sin descripción",
-      "id": "hOFCGV1YUQc"
-    },
-    {
-      "nombre": "5",
-      "precio": 5,
+      "nombre": "iPhone 13 128GB",
+      "precio": 3200000,
       "stock": 5,
-      "descripcion": "555",
-      "id": "GoBTDQ3sF-k"
+      "descripcion": "Smartphone Apple color midnight",
+      "id": "p8"
     },
     {
-      "nombre": "Producto 55",
-      "precio": 5,
-      "stock": 100,
-      "descripcion": "5",
-      "id": "h_sAWWhYYkY"
+      "nombre": "Cargador USB-C Anker 20W",
+      "precio": 85000,
+      "stock": 30,
+      "descripcion": "Cargador rápido compatible con Android y iPhone",
+      "id": "p9"
+    },
+    {
+      "nombre": "Tablet Samsung Galaxy Tab S6 Lite",
+      "precio": 1450000,
+      "stock": 7,
+      "descripcion": "Tablet con S-Pen ideal para estudio y trabajo",
+      "id": "p10"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
