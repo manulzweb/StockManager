@@ -19,11 +19,13 @@ const init = async () => {
         await initI18n();
 
         const data = await getProducts()
-        const inventoryController = new InventoryController('#inventory-list', '#product-form')
+        const inventoryModel = new InventoryModel()
+        const inventoryController = new InventoryController('#inventory-list', '#product-form', inventoryModel)
         inventoryController.render(data)
 
+        // Listen for language changes to re-render dynamic texts
         window.addEventListener('languageChanged', () => {
-            inventoryController._renderTable(inventoryController._getCurrentProducts());
+            inventoryController._renderTable();
             inventoryController._renderStats();
         });
     } catch (e) {

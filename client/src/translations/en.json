@@ -23,7 +23,7 @@
     "stock": "In Stock",
     "price": "Unit Price",
     "actions": "Actions",
-    "empty": "No products in inventory"
+    "empty": "No products in inventory with the name:"
   },
   "stats": {
     "total_sku": "Total SKUs",

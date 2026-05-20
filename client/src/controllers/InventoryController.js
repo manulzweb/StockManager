@@ -19,10 +19,8 @@ export class InventoryController {
         if (!products) {
             throw new Error(i18next.t('table.empty'))
         }
-        products.forEach((product) => {
-            this.products.set(String(product.id), product)
-        })
-        this._renderTable(products)
+        this.model.setProducts(products)
+        this._renderTable()
         this._renderStats()
     }
 
@@ -57,15 +55,17 @@ export class InventoryController {
 
         if (btnPrev && !btnPrev.disabled) {
             btnPrev.addEventListener('click', () => {
-                this.currentPage--
-                this._renderTable(this._getCurrentProducts())
+                if (this.model.prevPage()) {
+                    this._renderTable()
+                }
             })
         }
 
         if (btnNext && !btnNext.disabled) {
             btnNext.addEventListener('click', () => {
-                this.currentPage++
-                this._renderTable(this._getCurrentProducts())
+                if (this.model.nextPage()) {
+                    this._renderTable()
+                }
             })
         }
     }
@@ -118,24 +118,43 @@ export class InventoryController {
     }
 
     _searchProduct(query){
-        this.currentPage = 1
-        const allProducts = Array.from(this.products.values())
-        if (!query) return allProducts
+        this.model.currentPage = 1
+        const allProducts = this.model.getAllProducts()
+        if (!query) {
+            this._renderTable()
+            return
+        }
         const starts = []
         const contains = []
+        const lowerQuery = query.toLowerCase()
         for (const product of allProducts) {
             const name = product.nombre.toLowerCase()
-            if (name.startsWith(query)) {
+            if (name.startsWith(lowerQuery)) {
                 starts.push(product)
-            } else if (name.includes(query)) {
+            } else if (name.includes(lowerQuery)) {
                 contains.push(product)
             }
         }
-        this._renderTable([...starts, ...contains])
-    }
+        const itemsToShow = [...starts, ...contains]
+        
+        if (!itemsToShow.length) {
+       this.tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="py-10 text-center text-slate-500 dark:text-slate-400">
+                    ${i18next.t('table.empty')} ${query}
+                    </td>
+                </tr>
+                `
+            return
+        }
+        let tableRows = ''
 
-    _getCurrentProducts() {
-        return Array.from(this.products.values())
+        itemsToShow.forEach(product => {
+            tableRows += tableRow(product)
+        })
+        this.tableBody.innerHTML = tableRows
+        this._attachEventListeners()
+        this._renderPaginationUI()
     }
 
     _initFormListener() {
@@ -211,11 +230,8 @@ export class InventoryController {
 
     async _handleCreate() {
         const newData = this._validateInputs()
-        const createdProduct = await createProduct(newData)
-        this.products.set(String(createdProduct.id), createdProduct)
-        const currentProducts = this._getCurrentProducts()
-        this.currentPage = Math.ceil(currentProducts.length / this.itemsPerPage) || 1
-        this._renderTable(currentProducts)
+        await this.model.addProduct(newData)
+        this._renderTable()
         this._renderStats()
     }
 
@@ -229,26 +245,14 @@ export class InventoryController {
     async _handleDelete(product) {
         const isConfirmed = await showConfirm(
             i18next.t('toast.confirm_delete_title'),
-            i18next.t('toast.confirm_delete_text', { nombre: product.nombre, precio: product.precio, stock: product.stock }),
+            product,
             null,
             { title: i18next.t('toast.cancel_title'), text: i18next.t('toast.cancel_text') }
         )
 
         if (isConfirmed) {
-            this.products.delete(String(product.id))
-
-            const currentProducts = this._getCurrentProducts()
-            const totalPagesCalculated = Math.ceil(currentProducts.length / this.itemsPerPage)
-            
-            if (this.currentPage > totalPagesCalculated && totalPagesCalculated > 0) {
-                this.currentPage = totalPagesCalculated
-            } else if (this.currentPage === 0 && totalPagesCalculated > 0) {
-                this.currentPage = 1
-            }
-
-            this._renderTable(currentProducts)
-
-            await deleteProduct(product.id)
+            await this.model.removeProduct(product.id)
+            this._renderTable()
             showToast(i18next.t('toast.notification'), i18next.t('toast.success_delete'), 'success')
             this._renderStats()
         }
@@ -285,16 +289,16 @@ export class InventoryController {
         statsContainer.innerHTML = `
             ${statCard({
             title: i18next.t('stats.total_sku'),
-            value: totalSKU
+            value: stats.totalSKU
         })}
             ${statCard({
             title: i18next.t('stats.inventory_value'),
-            value: '$' + formatPriceText(totalValue),
+            value: '$' + formatPriceText(stats.totalValue),
             borderStyle: 'border-l-4 border-l-(--brand)'
         })}
             ${statCard({
             title: i18next.t('stats.critical_stock'),
-            value: criticalStock,
+            value: stats.criticalStock,
             borderStyle: 'border-l-4 border-l-(--danger-border)',
             valueColor: 'text-(--danger-text)'
         })}

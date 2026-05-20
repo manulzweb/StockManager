@@ -23,7 +23,7 @@
     "stock": "Existencias",
     "price": "Precio Unit.",
     "actions": "Acciones",
-    "empty": "No hay productos en el inventario"
+    "empty": "No hay productos en el inventario con el nombre: "
   },
   "stats": {
     "total_sku": "Total SKU",

@@ -2,7 +2,7 @@ import i18next from 'i18next';
 
 export const pagination = ({ start, end, total, hasPrev, hasNext }) => {
     const disabledClass = 'text-(--text-muted) cursor-not-allowed border-(--border-100) opacity-50'
-    const activeClass = 'text-(--brand) hover:bg-(--bg-hover) border-(--border-200) bg-(--bg-card) shadow-sm'
+    const activeClass = 'text-(--brand) hover:bg-(--bg-hover) border-(--border-200) bg-(--bg-card) shadow-sm hover:cursor-pointer'
 
     const prevClass = hasPrev ? activeClass : disabledClass
     const nextClass = hasNext ? activeClass : disabledClass
