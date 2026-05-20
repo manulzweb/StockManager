@@ -69,6 +69,20 @@
       "stock": 7,
       "descripcion": "Tablet con S-Pen ideal para estudio y trabajo",
       "id": "p10"
+    },
+    {
+      "nombre": "5",
+      "precio": 5,
+      "stock": 5,
+      "descripcion": "Sin descripción",
+      "id": "eA21NsHnp5I"
+    },
+    {
+      "nombre": "5",
+      "precio": 54,
+      "stock": 5,
+      "descripcion": "Sin descripción",
+      "id": "QnnEKA5xBzY"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

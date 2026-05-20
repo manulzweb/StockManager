@@ -1,24 +1,6 @@
 import i18next from 'i18next';
-
-export const getColorByStock = (stock) => {
-    const STOCK_COLOR = [
-        { limit: 5, styles: 'bg-(--danger-bg) text-(--danger-text) border-(--danger-border)' },
-        { limit: 10, styles: 'bg-(--warning-bg) text-(--warning-text) border-(--warning-border)' }
-    ]
-
-    let firstValid = STOCK_COLOR.find(item => stock < item.limit)
-    return firstValid?.styles || 'bg-(--success-bg) text-(--success-text) border-(--success-border)'
-}
-
-export const formatStockText = (stock) => {
-    if (stock > 1) return `${stock} ${i18next.t('components.units')}`
-    if (stock === 1) return `${stock} ${i18next.t('components.unit')}`
-    return i18next.t('components.out_of_stock')
-}
-
-export const formatPriceText = (price) => {
-    return price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
-}
+import { getColorByStock } from '../utils/stockHelpers';
+import { formatStockText, formatPriceText } from '../utils/formatters';
 
 export const tableRow = (product) => {
     let stockColor = getColorByStock(product.stock)

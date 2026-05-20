@@ -16,6 +16,7 @@
     "description_placeholder": "Specs, colors, condition...",
     "btn_save": "Save Product",
     "btn_update": "Update",
+    "btn_cancel": "Cancel",
     "btn_clear": "Clear Form"
   },
   "table": {

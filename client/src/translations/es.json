@@ -16,6 +16,7 @@
     "description_placeholder": "Especificaciones, colores, estado...",
     "btn_save": "Guardar Producto",
     "btn_update": "Actualizar",
+    "btn_cancel": "Cancelar",
     "btn_clear": "Limpiar Formulario"
   },
   "table": {

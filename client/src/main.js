@@ -1,37 +1,23 @@
-import { getProducts } from './services/product.service';
+import { initTheme } from './services/themeService';
+import { initI18n } from './services/i18nService';
+import { initInventory, dibujarTodo } from './services/inventoryService';
 import { showToast } from './shared/components/Toast';
-import { InventoryModel } from './models/InventoryModel';
-import { InventoryController } from "./controllers/InventoryController";
-import { ThemeController } from "./controllers/ThemeController";
-import { initI18n } from "./shared/i18n";
 import './styles/globals.css';
 
 const init = async () => {
     try {
-        const themeController = new ThemeController();
-        const themeSelect = document.querySelector('#theme-selector');
-        if (themeSelect) {
-            themeSelect.addEventListener('change', (e) => {
-                themeController.setTheme(e.target.value);
-            });
-        }
-
+        initTheme();
         await initI18n();
+        await initInventory();
 
-        const data = await getProducts()
-        const inventoryModel = new InventoryModel()
-        const inventoryController = new InventoryController('#inventory-list', '#product-form', inventoryModel)
-        inventoryController.render(data)
-
-        // Listen for language changes to re-render dynamic texts
         window.addEventListener('languageChanged', () => {
-            inventoryController._renderTable();
-            inventoryController._renderStats();
+            dibujarTodo();
         });
+
     } catch (e) {
-        showToast('toast.warning', 'toast.error_name', 'error');
-        console.log(e);
+        showToast('Error', 'Hubo un problema al iniciar la aplicación', 'error');
+        console.error(e);
     }
 }
 
-init()
+init();
